@@ -10,7 +10,6 @@
 
 /* Defines -------------------------------------------------------------------*/
 #define HSI_VALUE ((uint32_t)16000000) /*!< Value of the Internal oscillator in Hz */
-
 /* GLOBAL VARIABLES */
 static uint32_t msTicks = 0; /*!< Variable to store millisecond ticks. @warning **It must be declared volatile!** Just because it is modified in an ISR. **Add it to the definition** after *static*. */
 
@@ -150,6 +149,20 @@ void port_system_delay_until_ms(uint32_t *p_t, uint32_t ms)
 //------------------------------------------------------
 // GPIO RELATED FUNCTIONS
 //------------------------------------------------------
+void port_system_gpio_config(GPIO_TypeDef * port, uint8_t pin, uint8_t mode, uint8_t pupd) 
+{
+  if(port == GPIOA){
+    RCC -> AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+  }
+  else if (port == GPIOB){
+    RCC -> AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+  }
+  else if (port == GPIOC){
+    RCC -> AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+  }
+  
+}
+
 void port_system_gpio_exti_enable(uint8_t pin, uint8_t priority, uint8_t subpriority)
 {
   NVIC_SetPriority(GET_PIN_IRQN(pin), NVIC_EncodePriority(NVIC_GetPriorityGrouping(), priority, subpriority));

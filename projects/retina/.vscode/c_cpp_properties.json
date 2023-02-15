@@ -88,11 +88,11 @@
             "defines": [
                 "STM32F446xx"
             ],
-            // "compilerPath": "/usr/bin/arm-none-eabi-gcc",
-            "compilerPath": "/usr/local/bin/arm-none-eabi-gcc", // If you installed the toolchain via brew
+            "compilerPath": "/usr/local/bin/arm-none-eabi-gcc",
             "cStandard": "gnu17",
             "cppStandard": "gnu++17",
-            "intelliSenseMode": "macos-gcc-arm"
+            "intelliSenseMode": "macos-gcc-arm",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4

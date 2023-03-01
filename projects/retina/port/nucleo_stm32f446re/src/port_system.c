@@ -10,10 +10,14 @@
 
 /* Defines -------------------------------------------------------------------*/
 #define HSI_VALUE ((uint32_t)16000000) /*!< Value of the Internal oscillator in Hz */
-
 #define EXTIx 0x0F
+#define TRIGGER_RISING_EDGE 0x01
+#define TRIGGER_FALLING_EDGE 0x02
+#define TRIGGER_BOTH_EDGE  0x03
+#define EVENT_REQUEST 0x04
+#define INTERRUPT_REQUEST 0x08
+#define Hibrido
 
-#define GPIOx_MASK 0
 
 
 
@@ -191,11 +195,21 @@ void port_system_gpio_config_exti(GPIO_TypeDef * p_port, uint8_t pin, uint32_t m
   SYSCFG -> EXTICR[i] &= ~(EXTIx << 4*(pin % 4));
 
   if (p_port == GPIOA){
-    SYSCFG -> EXTICR[i] |= (GPIOx_MASK << 4*(pin % 4));
+    SYSCFG -> EXTICR[i] |= (0 << 4*(pin % 4));
   } else if (p_port == GPIOB){
-    SYSCFG -> EXTICR[i] |= (GPIOx_MASK +1 << 4*(pin % 4));
+    SYSCFG -> EXTICR[i] |= (1 << 4*(pin % 4));
   } else if (p_port == GPIOC){
-    SYSCFG -> EXTICR[i] |= (GPIOx_MASK +2 << 4*(pin % 4));
+    SYSCFG -> EXTICR[i] |= (2 << 4*(pin % 4));
+  }
+
+  if (mode == TRIGGER_RISING_EDGE){
+    EXTI->RTSR |= BIT_POS_TO_MASK(pin);
+  }else if (mode == TRIGGER_FALLING_EDGE ){
+    EXTI->FTSR |= BIT_POS_TO_MASK(pin);
+  }else if (mode ==){
+
+  }else if (){
+    99
   }
 }
 
@@ -230,3 +244,4 @@ void SysTick_Handler(void)
   /* TO-DO alumnos */   
   msTicks++; 
 }
+https://prod.liveshare.vsengsaas.visualstudio.com/join?F25AAF87B81B583CB89C2C179F9A7C9B6377

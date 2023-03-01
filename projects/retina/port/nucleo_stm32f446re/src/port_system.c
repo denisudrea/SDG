@@ -10,13 +10,13 @@
 
 /* Defines -------------------------------------------------------------------*/
 #define HSI_VALUE ((uint32_t)16000000) /*!< Value of the Internal oscillator in Hz */
-#define EXTIx 0x0F
-#define TRIGGER_RISING_EDGE 0x01
-#define TRIGGER_FALLING_EDGE 0x02
-#define TRIGGER_BOTH_EDGE  0x03
-#define EVENT_REQUEST 0x04
-#define INTERRUPT_REQUEST 0x08
-#define Hibrido
+#define EXTIx 0x0F  //
+#define TRIGGER_RISING_EDGE 0x01  //Constante flanco de subida
+#define TRIGGER_FALLING_EDGE 0x02 //Constante flanco de bajada
+//#define TRIGGER_BOTH_EDGE  0x03 //Constante flanco de subida y bajada
+#define EVENT_REQUEST 0x04  //
+#define INTERRUPT_REQUEST 0x08  //
+
 
 
 
@@ -181,7 +181,9 @@ void port_system_gpio_config_exti(GPIO_TypeDef * p_port, uint8_t pin, uint32_t m
 {
   RCC -> APB2ENR |= RCC_APB2ENR_SYSCFGEN;
 
-  int i;
+  int i;  
+  
+  
 
   if (pin >= 0 && pin <= 3) {
     i = 0;
@@ -192,8 +194,11 @@ void port_system_gpio_config_exti(GPIO_TypeDef * p_port, uint8_t pin, uint32_t m
   } else if (pin >= 12 && pin <= 15) {
     i = 3;
   }
+
+  //Borrado del registro del puerto
   SYSCFG -> EXTICR[i] &= ~(EXTIx << 4*(pin % 4));
 
+  //Asociación de interrupción externa a puerto
   if (p_port == GPIOA){
     SYSCFG -> EXTICR[i] |= (0 << 4*(pin % 4));
   } else if (p_port == GPIOB){
@@ -202,28 +207,38 @@ void port_system_gpio_config_exti(GPIO_TypeDef * p_port, uint8_t pin, uint32_t m
     SYSCFG -> EXTICR[i] |= (2 << 4*(pin % 4));
   }
 
-  if (mode == TRIGGER_RISING_EDGE){
-    EXTI->RTSR |= BIT_POS_TO_MASK(pin);
-  }else if (mode == TRIGGER_FALLING_EDGE ){
-    EXTI->FTSR |= BIT_POS_TO_MASK(pin);
-  }else if (mode ==){
+//Seleción de modo de disparo: flanco de subida, bajada, ambos.
+  if (mode && TRIGGER_RISING_EDGE){EXTI->RTSR |= BIT_POS_TO_MASK(pin);}
+  if (mode && TRIGGER_FALLING_EDGE){EXTI->FTSR |= BIT_POS_TO_MASK(pin);}
 
-  }else if (){
-    99
-  }
+//Selección de modo: petición de evento o petición de interrupción 
+  if(mode && EVENT_REQUEST){EXTI->EMR |= BIT_POS_TO_MASK(pin);}
+  if(mode && INTERRUPT_REQUEST){EXTI->IMR |= BIT_POS_TO_MASK(pin);}
 }
 
+//Función ya definida
 void port_system_gpio_exti_enable(uint8_t pin, uint8_t priority, uint8_t subpriority)
 {
   NVIC_SetPriority(GET_PIN_IRQN(pin), NVIC_EncodePriority(NVIC_GetPriorityGrouping(), priority, subpriority));
   NVIC_EnableIRQ(GET_PIN_IRQN(pin));
 }
 
+//Función ya definida
 void port_system_gpio_exti_disable(uint8_t pin)
 {  
   NVIC_DisableIRQ(GET_PIN_IRQN(pin));
 }
 
+//Función que lee el valor digital de un pin (0 o 1) == (true o false) 
+void port_system_gpio_read(GPIO_TypeDef * p_port, uint8_t pin){
+  bool value = (bool)(p_port -> IDR & BIT_POS_TO_MASK(pin));
+  return value;
+}
+
+//Función que llamaremos cuadno queramos dar valor a un pin digital (1 o 0)
+void port_system_gpio_write(GPIO_TypeDef * 	p_port, uint8_t 	pin, bool 	value){
+
+}
 //------------------------------------------------------
 // INTERRUPT SERVICE ROUTINES
 //------------------------------------------------------
@@ -244,5 +259,3 @@ void SysTick_Handler(void)
   /* TO-DO alumnos */   
   msTicks++; 
 }
-https://prod.liveshare.vsengsaas.visualstudio.com/join?F25AAF87B81B583CB89C2C179F9A7C9B6377
-https://prod.liveshare.vsengsaas.visualstudio.com/join?F25AAF87B81B583CB89C2C179F9A7C9B6377

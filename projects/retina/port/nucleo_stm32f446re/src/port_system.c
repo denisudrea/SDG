@@ -179,33 +179,23 @@ void port_system_gpio_config_exti(GPIO_TypeDef * p_port, uint8_t pin, uint32_t m
 
   int i;
 
-  if (pin >= 0 || pin <= 3) {
+  if (pin >= 0 && pin <= 3) {
     i = 0;
-  } else if (pin >= 4 || pin <= 7) {
+  } else if (pin >= 4 && pin <= 7) {
     i = 1;
-  } else if (pin >= 8 || pin <= 11) {
+  } else if (pin >= 8 && pin <= 11) {
     i = 2;
-  } else if (pin >= 12 || pin <= 15) {
+  } else if (pin >= 12 && pin <= 15) {
     i = 3;
   }
   SYSCFG -> EXTICR[i] &= ~(EXTIx << 4*(pin % 4));
 
   if (p_port == GPIOA){
     SYSCFG -> EXTICR[i] |= (GPIOx_MASK << 4*(pin % 4));
-  } else if (p_port == GPIOA){
+  } else if (p_port == GPIOB){
     SYSCFG -> EXTICR[i] |= (GPIOx_MASK +1 << 4*(pin % 4));
-  } else if (p_port == GPIOA){
+  } else if (p_port == GPIOC){
     SYSCFG -> EXTICR[i] |= (GPIOx_MASK +2 << 4*(pin % 4));
-  } else if (p_port == GPIOA){
-    SYSCFG -> EXTICR[i] |= (GPIOx_MASK +3 << 4*(pin % 4));
-  } else if (p_port == GPIOA){
-    SYSCFG -> EXTICR[i] |= (GPIOx_MASK +4 << 4*(pin % 4));
-  } else if (p_port == GPIOA){
-    SYSCFG -> EXTICR[i] |= (GPIOx_MASK +5 << 4*(pin % 4));
-  } else if (p_port == GPIOA){
-    SYSCFG -> EXTICR[i] |= (GPIOx_MASK +6 << 4*(pin % 4));
-  } else if (p_port == GPIOA){
-    SYSCFG -> EXTICR[i] |= (GPIOx_MASK +7 << 4*(pin % 4));
   }
 }
 

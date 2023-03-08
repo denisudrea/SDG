@@ -237,7 +237,22 @@ void port_system_gpio_read(GPIO_TypeDef * p_port, uint8_t pin){
 
 //Función que llamaremos cuadno queramos dar valor a un pin digital (1 o 0)
 void port_system_gpio_write(GPIO_TypeDef * 	p_port, uint8_t 	pin, bool 	value){
+  if (value) {
+        // set the pin
+        p_port->BSRR = (uint32_t) (1 << pin);
+    } else {
+        // clear the pin
+        p_port->BSRR = (uint32_t) (1 << (pin + 16));
+    }
+  }
 
+  //Fucnión que lee el valor de un pin y escribe el valor opuesto. Usa las macros HIGH y LOW
+  void port_system_gpio_toggle(GPIO_TypeDef *p_port, uint8_t pin) {
+    if (p_port->IDR & BIT_POS_TO_MASK(pin)) {
+        p_port->BSRR = (uint32_t) (LOW << (pin + 16));
+    } else {
+        p_port->BSRR = (uint32_t) (HIGH << pin);
+    }
 }
 //------------------------------------------------------
 // INTERRUPT SERVICE ROUTINES

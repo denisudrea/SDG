@@ -230,7 +230,7 @@ void port_system_gpio_exti_disable(uint8_t pin)
 }
 
 //Función que lee el valor digital de un pin (0 o 1) == (true o false) 
-void port_system_gpio_read(GPIO_TypeDef * p_port, uint8_t pin){
+bool port_system_gpio_read(GPIO_TypeDef * p_port, uint8_t pin){
   bool value = (bool)(p_port -> IDR & BIT_POS_TO_MASK(pin));
   return value;
 }
